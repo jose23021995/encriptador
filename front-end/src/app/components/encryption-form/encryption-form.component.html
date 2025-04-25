@@ -1,0 +1,18 @@
+<form class="mic-container" [formGroup]="form">
+    <app-call-string
+    [config]="{
+      length: 15,
+      pregunta: '¿Cómo prefiere que te llamemos?',
+      textbox: 'Escribe tu nombre'
+    }"
+    (reconocimientoFinalizado)="procesarTextoReconocido($event)">
+  </app-call-string>
+    <button
+      type="button"
+      (click)="enviar()"
+      [disabled]="form.invalid"
+      mat-button>
+      Comenzar
+    </button>
+  </form>
+  

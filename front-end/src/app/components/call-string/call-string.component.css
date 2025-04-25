@@ -1,0 +1,74 @@
+/* Estilo para campos incompletos */
+.incompleto {
+    color: #bababa !important;
+  }
+  
+  /* Estilo para campos completos */
+  .completo {
+    color: red;
+  }
+  
+  /* Estilo para etiquetas de Angular Material */
+  mat-form-field,
+  mat-label,
+  mat-icon,
+  input[matInput] {
+    color: #bababa !important;
+  }
+  
+  /* Input de texto (Angular Material) */
+  input[matInput] {
+    border-bottom: 1px solid #bababa !important;
+  }
+  
+  /* Botón del micrófono */
+  #toggleEscucha {
+    margin: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Secciones de ancho completo */
+  section,
+  .char,
+  .input-section,
+  .container,
+  .char-count,
+  .char-count p
+   {
+    width: 100%;
+    display: flex;
+  }
+  section{
+    align-items: center;
+  }
+  
+  .char {
+    
+    justify-content: flex-end;
+    font-size: 0.9rem;
+  }
+  
+  .container{
+    flex-direction: column;
+  }
+  
+  .input-section,.char-count,.char-count p{
+    flex-direction: row;
+  }
+  
+  button{
+    background: none;
+    border: none;
+  
+  }
+  
+  .char-count p{
+    justify-content: end;
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: 50px;
+  }

@@ -1,0 +1,28 @@
+.container,.container .form{
+    display: flex;
+}
+
+.container{
+    flex-direction: row;
+    width: 100%;
+}
+
+.container .form{
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 60%;
+}
+
+.container .form h1{
+    width: 207px;
+}
+
+.container .form img{
+    width: 200px;
+}
+
+.container .form h5{
+    font-weight: normal;
+    margin-top: 0;
+}
