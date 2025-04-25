@@ -417,7 +417,7 @@ export class EncriptadorService {  // Define la clase 'EncriptadorService', que 
   }
 }
 ```
-#### Configuracion de los servicios
+#### Configuracion de los component`s`
 ##### Codigo call-string
 ```
 src\
@@ -639,4 +639,14 @@ export class CallStringComponent implements OnInit { // Clase del componente que
     margin-top: 0;
     margin-bottom: 50px;
   }
+```
+##### Codigo encryption-form
+```
+src\
+└── app\
+    ├── components\
+    │   ├── encryption-form\
+    │   │   ├── encryption-form.component.ts
+    │   │   ├── encryption-form.component.html
+    │   │   ├── encryption-form.component.css
 ```
