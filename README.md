@@ -789,3 +789,65 @@ button{
     color: aliceblue;
 }
 ```
+#### app.component
+##### app.component.ts
+```
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { EncriptadorService } from './utilidades/services/encriptador.service';
+import { EncryptionFormComponent } from "./components/encryption-form/encryption-form.component"; 
+import { ReactiveFormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-root',
+  imports: [RouterOutlet, EncryptionFormComponent,ReactiveFormsModule],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
+})
+export class AppComponent {
+  constructor(){}
+}
+```
+##### app.component.html
+```
+<div class="container">
+  <div class="form">
+    <img src="people.gif">
+    <h1>¡Te damos la bienvenida a Banco Azteca!</h1>
+    <h5>Usa tu préstamo como dinero en efectivo o compra en donde quieras.</h5>
+    <app-encryption-form></app-encryption-form>
+  </div>
+</div>
+```
+##### app.component.css
+```
+.container,.container .form{
+    display: flex;
+}
+
+.container{
+    flex-direction: row;
+    width: 100%;
+}
+
+.container .form{
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 60%;
+}
+
+.container .form h1{
+    width: 207px;
+}
+
+.container .form img{
+    width: 200px;
+}
+
+.container .form h5{
+    font-weight: normal;
+    margin-top: 0;
+}
+
+```
