@@ -180,6 +180,12 @@ karma-jasmine-html-reporter@~2.1.0
 typescript@~5.6.2
 ```
 ### genberacion de plantilla y estilos a nivel src\app
+```
+src\
+└── app\
+└── index.html                     # Archivo HTML principal (donde se carga la aplicación)
+└── styles.css                     # Estilos globales de la aplicación
+```
 1. index.html
 ```
 <!doctype html>
@@ -337,4 +343,300 @@ export const routes: Routes = [
 ng g s services/Encryption --skip-tests
 ng g c components/EncryptionForm --skip-tests
 ng g c components/CallString --skip-tests
+```
+## Estructura de componentes y servicios
+```
+src\
+└── app\
+    ├── components\                  # Carpeta que contiene los componentes
+    │   ├── encryption-form\         # Componente EncryptionForm
+    │   │   ├── encryption-form.component.ts
+    │   │   ├── encryption-form.component.html
+    │   │   ├── encryption-form.component.css
+    │   │   └── encryption-form.component.spec.ts  (archivo de pruebas, pero será omitido con --skip-tests)
+    │   └── call-string\              # Componente CallString
+    │       ├── call-string.component.ts
+    │       ├── call-string.component.html
+    │       ├── call-string.component.css
+    │       └── call-string.component.spec.ts  (archivo de pruebas omitido)
+    ├── services\                     # Carpeta que contiene los servicios
+    │   └── encryption.service.ts     # Servicio Encryption
+```
+
+### Estructura de todos los archivos que se ocuparan:
+```
+src\
+└── app\
+    ├── components\
+    │   ├── encryption-form\
+    │   │   ├── encryption-form.component.ts
+    │   │   ├── encryption-form.component.html
+    │   │   ├── encryption-form.component.css
+    │   └── call-string\
+    │       ├── call-string.component.ts
+    │       ├── call-string.component.html
+    │       ├── call-string.component.css
+    ├── services\
+    │   └── encryption.service.ts
+    ├── model\
+    │   ├── encriptador.model.ts
+    │   └── voz-config.model.ts
+    ├── app.component.ts
+    ├── app.component.html
+    ├── app.component.css
+    ├── app.config.ts
+    ├── app.routing.ts
+└── styles.css
+└── index.html
+```
+### se desarrollo desde la capa superficial, hasta la capa raiz
+#### Configuracion de los servicios
+```
+src\
+└── app\
+    ├── services\
+    │   └── encryption.service.ts
+```
+##### Codigo encryption.service.ts
+```
+import { HttpClient } from '@angular/common/http';  // Importa la clase HttpClient de Angular para hacer solicitudes HTTP.
+import { Injectable } from '@angular/core';  // Importa el decorador Injectable, que se utiliza para hacer que el servicio sea inyectable.
+import { EncriptarRequest, EncriptarResponse } from '../../model/encriptador.model';  // Importa los modelos EncriptarRequest y EncriptarResponse definidos en la carpeta 'model'.
+
+@Injectable({
+  providedIn: 'root'  // Este decorador hace que el servicio esté disponible en toda la aplicación (incluso en el módulo raíz).
+})
+export class EncriptadorService {  // Define la clase 'EncriptadorService', que maneja la lógica de encriptación.
+  private apiUrl = 'http://localhost:3000/encriptar';  // Define la URL base para hacer la solicitud de encriptación al backend.
+
+  constructor(private http: HttpClient) {}  // El constructor inyecta HttpClient en el servicio, permitiendo realizar solicitudes HTTP.
+
+  encriptarNombre(nombre: string) {  // Método para encriptar el nombre recibido como parámetro.
+    const payload: EncriptarRequest = { texto: nombre };  // Se crea un objeto 'payload' con la estructura de EncriptarRequest, con el nombre como texto.
+    return this.http.post<EncriptarResponse>(this.apiUrl, payload);  // Realiza una solicitud HTTP POST al backend con el 'payload', esperando una respuesta de tipo EncriptarResponse.
+  }
+}
+```
+#### Configuracion de los servicios
+##### Codigo call-string
+```
+src\
+└── app\
+    ├── components\
+    │   └── call-string\
+    │       ├── call-string.component.ts
+    │       ├── call-string.component.html
+    │       ├── call-string.component.css
+```
+###### call-string.component.ts
+```
+// Importación de módulos y decoradores necesarios desde Angular y otros paquetes
+import { Component, NgZone, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { CommonModule } from '@angular/common'; // Módulo común que incluye directivas como *ngIf, *ngFor, etc.
+import { FormsModule } from '@angular/forms'; // Módulo necesario para usar [(ngModel)] y otras funcionalidades de formularios.
+import { MatIconModule } from '@angular/material/icon'; // Módulo de Angular Material para usar iconos.
+import { MatTooltipModule } from '@angular/material/tooltip'; // Módulo de tooltips de Angular Material.
+import { MatFormFieldModule } from '@angular/material/form-field'; // Módulo para usar campos de formularios con estilo Material.
+import { MatInputModule } from '@angular/material/input'; // Módulo de entradas de texto con estilo Material.
+import { VozConfig, ResultadoReconocimiento } from '../../model/voz-config.model'; // Importa interfaces definidas en el modelo.
+
+@Component({
+  selector: 'app-call-string', // Selector que identifica al componente en los templates HTML.
+  standalone: true, // Permite que este componente funcione de forma independiente sin necesidad de un módulo Angular.
+  imports: [ // Importación de los módulos necesarios para este componente.
+    CommonModule,
+    FormsModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule
+  ],
+  templateUrl: './call-string.component.html', // Ruta al archivo de template HTML asociado al componente.
+  styleUrl: './call-string.component.css' // Ruta al archivo de estilos CSS del componente.
+})
+export class CallStringComponent implements OnInit { // Clase del componente que implementa la interfaz OnInit.
+  @Input() config!: VozConfig; // Recibe un objeto de configuración desde el componente padre.
+
+  @Output() reconocimientoFinalizado = new EventEmitter<ResultadoReconocimiento>(); 
+  // Evento que emite el resultado del reconocimiento de voz hacia el componente padre.
+
+  textoReconocido: string = ''; // Texto reconocido por el micrófono.
+  escuchando: boolean = false; // Indica si se está escuchando (true) o no (false).
+
+  private reconocimiento: any; // Instancia de reconocimiento de voz (Web Speech API).
+
+  constructor(private zone: NgZone) {} 
+  // Se inyecta NgZone para ejecutar actualizaciones de UI dentro del contexto Angular.
+
+  ngOnInit(): void { // Hook de ciclo de vida que se ejecuta al inicializar el componente.
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    // Intenta usar la API de reconocimiento de voz nativa o la versión de WebKit (para compatibilidad con navegadores como Chrome).
+
+    if (!SpeechRecognition) {
+      console.error('El navegador no soporta Web Speech API'); // Muestra un error si el navegador no soporta la API.
+      return;
+    }
+
+    this.reconocimiento = new SpeechRecognition(); // Crea una nueva instancia del reconocimiento de voz.
+    this.reconocimiento.lang = 'es-MX'; // Idioma configurado para el reconocimiento de voz.
+    this.reconocimiento.continuous = true; // Escucha de forma continua hasta que se detenga manualmente.
+    this.reconocimiento.interimResults = true; // Obtiene resultados parciales mientras se está hablando.
+
+    // Evento que se dispara cuando hay un resultado del reconocimiento de voz.
+    this.reconocimiento.onresult = (event: any) => {
+      let transcript = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        transcript += event.results[i][0].transcript; // Se concatena el texto reconocido.
+      }
+
+      // Angular detecta el cambio en la zona y actualiza la UI.
+      this.zone.run(() => {
+        this.textoReconocido = transcript.slice(0, this.config.length); // Limita el texto al máximo definido en la configuración.
+      });
+    };
+
+    // Evento que se dispara cuando se detiene el reconocimiento de voz.
+    this.reconocimiento.onend = () => {
+      this.escuchando = false; // Cambia el estado de escucha a falso.
+      this.reconocimientoFinalizado.emit({
+        texto: this.textoReconocido.trim(), // Emite el texto reconocido, sin espacios iniciales/finales.
+        fecha: new Date(), // Fecha y hora actuales.
+        idioma: 'es-MX' // Idioma usado durante el reconocimiento.
+      });
+    };
+  }
+
+  toggleEscucha(): void { // Función que alterna entre iniciar o detener la escucha.
+    if (!this.reconocimiento) return; // Si no se inicializó el reconocimiento, sale de la función.
+
+    if (this.escuchando) {
+      this.reconocimiento.stop(); // Si ya está escuchando, detiene el reconocimiento.
+    } else {
+      this.reconocimiento.start(); // Si no está escuchando, lo inicia.
+    }
+    this.escuchando = !this.escuchando; // Cambia el estado de escucha (true ↔ false).
+  }
+}
+```
+##### call-string.component.html
+```
+<div class="container"> <!-- Contenedor principal con estilos aplicados por la clase 'container' -->
+
+  <!-- Muestra la pregunta configurada dinámicamente desde el componente -->
+  <label for="nombre" class="pregunta">{{ config.pregunta }}</label>
+
+  <section class="input-section"> <!-- Agrupa el input y el botón del micrófono -->
+
+    <!-- Campo de entrada estilo Angular Material con fondo lleno -->
+    <mat-form-field appearance="fill" class="input-field">
+
+      <!-- Etiqueta que aparece dentro del input (placeholder), viene del modelo VozConfig -->
+      <mat-label>{{ config.textbox }}</mat-label>
+
+      <!-- Input deshabilitado que muestra el texto reconocido por voz -->
+      <input matInput id="nombre" [value]="textoReconocido" disabled />
+    </mat-form-field>
+
+    <!-- Botón con ícono para activar o detener el reconocimiento de voz -->
+    <button mat-icon-button
+            (click)="toggleEscucha()" <!-- Llama a la función que inicia o detiene el reconocimiento -->
+            [class.active]="escuchando" <!-- Aplica la clase 'active' si está escuchando -->
+            [attr.aria-label]="escuchando ? 'Detener reconocimiento de voz' : 'Iniciar reconocimiento de voz'" <!-- Accesibilidad: cambia el texto del lector según el estado -->
+            matTooltip="{{ escuchando ? 'Detener audio' : 'Habla ahora' }}" <!-- Tooltip que cambia según el estado -->
+            class="mic-button"> <!-- Clase para aplicar estilos al botón -->
+      
+      <!-- Icono que cambia entre micrófono (inactivo) y pausa (activo) -->
+      <mat-icon>{{ escuchando ? 'pause' : 'mic' }}</mat-icon>
+    </button>
+  </section>
+
+  <div class="char-count"> <!-- Muestra el conteo de caracteres reconocidos -->
+    <p [ngClass]="{ 
+          'completo': textoReconocido.length === config.length, 
+          'incompleto': textoReconocido.length < config.length 
+        }"> <!-- Cambia de color o estilo según si se alcanzó la longitud máxima -->
+
+      <!-- Muestra la cantidad de caracteres reconocidos vs. la cantidad esperada -->
+      {{ textoReconocido.length }}/{{ config.length }} caracteres
+    </p>
+  </div>
+</div>
+```
+##### call-string.component.css
+```
+/* Estilo para campos incompletos */
+.incompleto {
+    color: #bababa !important;
+  }
+  
+  /* Estilo para campos completos */
+  .completo {
+    color: red;
+  }
+  
+  /* Estilo para etiquetas de Angular Material */
+  mat-form-field,
+  mat-label,
+  mat-icon,
+  input[matInput] {
+    color: #bababa !important;
+  }
+  
+  /* Input de texto (Angular Material) */
+  input[matInput] {
+    border-bottom: 1px solid #bababa !important;
+  }
+  
+  /* Botón del micrófono */
+  #toggleEscucha {
+    margin: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Secciones de ancho completo */
+  section,
+  .char,
+  .input-section,
+  .container,
+  .char-count,
+  .char-count p
+   {
+    width: 100%;
+    display: flex;
+  }
+  section{
+    align-items: center;
+  }
+  
+  .char {
+    
+    justify-content: flex-end;
+    font-size: 0.9rem;
+  }
+  
+  .container{
+    flex-direction: column;
+  }
+  
+  .input-section,.char-count,.char-count p{
+    flex-direction: row;
+  }
+  
+  button{
+    background: none;
+    border: none;
+  
+  }
+  
+  .char-count p{
+    justify-content: end;
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: 50px;
+  }
 ```
