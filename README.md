@@ -179,6 +179,35 @@ karma-jasmine@~5.1.0
 karma-jasmine-html-reporter@~2.1.0
 typescript@~5.6.2
 ```
+### genberacion de plantilla y estilos a nivel src\app
+1. index.html
+```
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Ejercicio de encriptación</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="Banco_Azteca_Logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="mat-typography">
+  <app-root></app-root>
+</body>
+</html>
+```
+3. styles.css
+```
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background: #1c1c1c; color:#bababa}
+.mat-typography,.container{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+```
 ### Generar carpetas dentro del proyecto "src\app"
 1. src\app\model
 2. src\app\components
