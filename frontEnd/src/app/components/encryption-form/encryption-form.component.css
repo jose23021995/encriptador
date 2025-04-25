@@ -1,0 +1,9 @@
+button{
+    background: #bababa;
+    width: 100%;
+}
+.mat-mdc-button:not(:disabled) {
+    background: green;
+    border: none;
+    color: aliceblue;
+}
