@@ -401,7 +401,7 @@ src\
 ```
 import { HttpClient } from '@angular/common/http';  // Importa la clase HttpClient de Angular para hacer solicitudes HTTP.
 import { Injectable } from '@angular/core';  // Importa el decorador Injectable, que se utiliza para hacer que el servicio sea inyectable.
-import { EncriptarRequest, EncriptarResponse } from '../../model/encriptador.model';  // Importa los modelos EncriptarRequest y EncriptarResponse definidos en la carpeta 'model'.
+import { EncriptarRequest, EncriptarResponse } from '../model/encriptador.model';  // Importa los modelos EncriptarRequest y EncriptarResponse definidos en la carpeta 'model'.
 
 @Injectable({
   providedIn: 'root'  // Este decorador hace que el servicio esté disponible en toda la aplicación (incluso en el módulo raíz).
