@@ -1,1 +1,25 @@
-<p>call-string works!</p>
+<div class="container">
+    <label for="nombre" class="pregunta">{{ config.pregunta }}</label>
+    <section class="input-section">
+      <mat-form-field appearance="fill" class="input-field">
+        <mat-label>{{ config.textbox }}</mat-label>
+        <input matInput id="nombre" [value]="textoReconocido" disabled />
+      </mat-form-field>
+      <button mat-icon-button
+              (click)="toggleEscucha()"
+              [class.active]="escuchando"
+              [attr.aria-label]="escuchando ? 'Detener reconocimiento de voz' : 'Iniciar reconocimiento de voz'"
+              matTooltip="{{ escuchando ? 'Detener audio' : 'Habla ahora' }}"
+              class="mic-button">
+        <mat-icon>{{ escuchando ? 'pause' : 'mic' }}</mat-icon>
+      </button>
+    </section>
+    <div class="char-count">
+      <p [ngClass]="{
+          'completo': textoReconocido.length === config.length,
+          'incompleto': textoReconocido.length < config.length
+        }">
+        {{ textoReconocido.length }}/{{ config.length }} caracteres
+      </p>
+    </div>
+  </div>
