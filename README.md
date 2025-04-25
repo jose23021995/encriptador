@@ -650,3 +650,142 @@ src\
     │   │   ├── encryption-form.component.html
     │   │   ├── encryption-form.component.css
 ```
+##### encryption-form.component.ts
+```
+// Importa el decorador @Component para declarar un componente Angular
+import { Component } from '@angular/core';
+
+// Importa funcionalidades comunes necesarias para los componentes
+import { CommonModule } from '@angular/common';
+
+// Importa módulos para manejar formularios reactivos y template-driven
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+// Permite usar enrutamiento dentro del componente (ngIf, ngSwitch, routerLink, etc.)
+import { RouterOutlet } from '@angular/router';
+
+// Importa botón y iconos de Angular Material
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+
+// Importa el módulo de SweetAlert2 para usar mensajes emergentes bonitos
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+
+// Componente personalizado para reconocimiento de voz
+import { CallStringComponent } from '../../components/call-string/call-string.component';
+
+// Servicio que hace la lógica de encriptación (backend)
+import { EncryptionService } from '../../services/encryption.service';
+
+// Funciones para configurar el cliente HTTP en Angular (no se usan aquí directamente)
+import { provideHttpClient, withFetch } from '@angular/common/http';
+
+// Modelo que representa la respuesta del backend al encriptar
+import { EncriptarResponse } from '../../model/encriptador.model';
+
+// Modelo que representa el resultado del reconocimiento de voz
+import { ResultadoReconocimiento } from '../../model/voz-config.model';
+
+// Librería para mostrar mensajes (alertas) emergentes
+import Swal from 'sweetalert2';
+
+// Decorador para declarar el componente
+@Component({
+  selector: 'app-encryption-form', // Nombre de la etiqueta HTML del componente
+  imports: [ // Módulos importados necesarios en el template
+    CommonModule,
+    FormsModule,
+    RouterOutlet,
+    MatButtonModule,
+    MatIconModule,
+    CallStringComponent, // componente hijo que se usará en el HTML
+    ReactiveFormsModule,
+    SweetAlert2Module
+  ],
+  templateUrl: './encryption-form.component.html', // HTML asociado al componente
+  styleUrl: './encryption-form.component.css'      // CSS del componente
+})
+export class EncryptionFormComponent {
+  // Define el formulario reactivo con un grupo de controles
+  form: FormGroup;
+
+  // Variable para guardar el texto encriptado del backend
+  resultado: string = '';
+
+  // Constructor del componente, inyecta el servicio de encriptación y el formBuilder
+  constructor(
+    private encriptadorService: EncryptionService, // Servicio que llama al backend
+    private fb: FormBuilder // Utilidad para crear formularios
+  ) {
+    // Crea el formulario con un campo "voz", que es requerido y de al menos 1 carácter
+    this.form = this.fb.group({
+      voz: ['', [Validators.required, Validators.minLength(1)]]
+    });
+  }
+
+  // Método que se llama al hacer clic en "enviar"
+  enviar(): void {
+    const voz = this.form.get('voz')?.value.trim(); // Obtiene el valor del campo y le quita espacios
+
+    if (!voz) { // Valida que haya texto
+      Swal.fire('Error', 'Por favor ingresa o reconoce un texto antes de enviar.', 'error'); // Muestra error
+      return;
+    }
+
+    // Llama al servicio para encriptar el nombre
+    this.encriptadorService.encriptarNombre(voz).subscribe({
+      next: (res: EncriptarResponse) => { // Si la respuesta es exitosa
+        this.resultado = res.encriptado; // Guarda el texto encriptado
+        console.log('Resultado encriptado:', this.resultado); // Muestra en consola
+        Swal.fire('Éxito', this.resultado, 'success'); // Muestra alerta de éxito
+      },
+      error: (err) => { // Si ocurre un error en la petición
+        console.error('Error al encriptar el nombre:', err); // Muestra error en consola
+        Swal.fire('Error', 'No se pudo encriptar el nombre.', 'error'); // Muestra alerta de error
+      }
+    });
+  }
+
+  // Método que se llama cuando se recibe texto desde el componente de voz
+  procesarTextoReconocido(texto: ResultadoReconocimiento): void {
+    this.form.get('voz')?.setValue(texto); // Establece el texto reconocido en el campo del formulario
+  }
+}
+```
+##### encryption-form.component.html
+```
+<!-- Formulario con clase 'mic-container' y asociado al formulario reactivo 'form' definido en el TypeScript -->
+<form class="mic-container" [formGroup]="form">
+
+  <!-- Componente personalizado para capturar texto por voz o manualmente -->
+  <app-call-string
+    [config]="{                                <!-- Se le pasa una configuración como input -->
+      length: 15,                              <!-- Longitud máxima esperada del texto -->
+      pregunta: '¿Cómo prefiere que te llamemos?',  <!-- Pregunta que se muestra sobre el campo -->
+      textbox: 'Escribe tu nombre'             <!-- Etiqueta del campo de entrada -->
+    }"
+    (reconocimientoFinalizado)="procesarTextoReconocido($event)"> <!-- Evento personalizado que emite el texto reconocido -->
+  </app-call-string>
+
+  <!-- Botón para enviar el formulario, de tipo "button" para que no haga submit automático -->
+  <button
+    type="button"
+    (click)="enviar()"            <!-- Llama al método enviar() al hacer clic -->
+    [disabled]="form.invalid"     <!-- Desactiva el botón si el formulario no es válido -->
+    mat-button>                   <!-- Usa estilo de botón de Angular Material -->
+    Comenzar                      <!-- Texto del botón -->
+  </button>
+</form>
+```
+##### encryption-form.component.css
+```
+button{
+    background: #bababa;
+    width: 100%;
+}
+.mat-mdc-button:not(:disabled) {
+    background: green;
+    border: none;
+    color: aliceblue;
+}
+```
