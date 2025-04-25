@@ -1,7 +1,0 @@
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background: #1c1c1c; color:#bababa}
-.mat-typography,.container{
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
-}
