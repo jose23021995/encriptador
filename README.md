@@ -884,7 +884,7 @@ zone.js	Necesario para la detección de cambios en Angular.
 
 
 ###📦 reconocimiento de voz en angular
-ejemplo usar SpeechRecognition Web Speech API en JavaScript
-SpeechRecognition JavaScript ejemplo en español recortar texto con slice()
-javascript SpeechRecognition onresult onend ejemplo completo
+- ejemplo usar SpeechRecognition Web Speech API en JavaScript
+- SpeechRecognition JavaScript ejemplo en español recortar texto con slice()
+- javascript SpeechRecognition onresult onend ejemplo completo
 
