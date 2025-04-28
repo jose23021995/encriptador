@@ -851,3 +851,40 @@ export class AppComponent {
 }
 
 ```
+📦 Paqueterías en dependencies (uso en producción):
+
+@angular/animations	Soporte de animaciones en Angular.
+@angular/forms	Para formularios reactivos y template-driven.
+@angular/material	Librería de componentes UI (botones, tablas, diálogos, etc.).
+@sweetalert2/ngx-sweetalert2	Adaptador Angular para usar sweetalert2 (alertas bonitas).
+sweetalert2	Librería de alertas bonitas en JavaScript.
+zone.js	Necesario para la detección de cambios en Angular.
+
+## 📦Busquedas en internet
+
+
+### 📦 Ejersicio de obtención de datos encriptados:
+- Node.js crypto publicEncrypt ejemplo
+- Node.js crypto RSA/ECB/PKCS1Padding encriptar y desencriptar
+- Node.js crypto module usar RSA con PKCS1Padding
+- Node.js RSA encryption with RSA/ECB/PKCS1Padding UTF-8
+- Express.js encriptar texto con RSA PKCS1Padding
+- Node.js publicEncrypt privateDecrypt RSA/ECB/PKCS1Padding ejemplo
+- Cómo cifrar y descifrar datos en Node.js usando RSA PKCS1Padding
+- Node.js crypto encrypt decrypt with RSA and PKCS1Padding
+- RSA encryption decryption Node.js example PKCS1Padding
+- RSA/ECB/PKCS1Padding encryption Node.js crypto UTF-8
+- Express.js API encrypt data with RSA public key
+- Node.js RSA encryption with public key
+- Cómo cifrar texto con llave pública en Node.js
+- Node.js crypto module encrypt with RSA
+- Ejemplo API REST encriptar datos RSA Node.js
+- Express body-parser encriptar texto usando crypto
+
+
+
+###📦 reconocimiento de voz en angular
+ejemplo usar SpeechRecognition Web Speech API en JavaScript
+SpeechRecognition JavaScript ejemplo en español recortar texto con slice()
+javascript SpeechRecognition onresult onend ejemplo completo
+
