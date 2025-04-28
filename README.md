@@ -853,12 +853,12 @@ export class AppComponent {
 ```
 📦 Paqueterías en dependencies (uso en producción):
 
-@angular/animations	Soporte de animaciones en Angular.
-@angular/forms	Para formularios reactivos y template-driven.
-@angular/material	Librería de componentes UI (botones, tablas, diálogos, etc.).
-@sweetalert2/ngx-sweetalert2	Adaptador Angular para usar sweetalert2 (alertas bonitas).
-sweetalert2	Librería de alertas bonitas en JavaScript.
-zone.js	Necesario para la detección de cambios en Angular.
+- @angular/animations	Soporte de animaciones en Angular.
+- @angular/forms	Para formularios reactivos y template-driven.
+- @angular/material	Librería de componentes UI (botones, tablas, diálogos, etc.).
+- @sweetalert2/ngx-sweetalert2	Adaptador Angular para usar sweetalert2 (alertas bonitas).
+- sweetalert2	Librería de alertas bonitas en JavaScript.
+- zone.js	Necesario para la detección de cambios en Angular.
 
 ## 📦Busquedas en internet
 
