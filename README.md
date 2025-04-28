@@ -851,7 +851,7 @@ export class AppComponent {
 }
 
 ```
-📦 Paqueterías en dependencies (uso en producción):
+📦 Paqueterías en dependencies (uso en este proyecto):
 
 - @angular/animations	Soporte de animaciones en Angular.
 - @angular/forms	Para formularios reactivos y template-driven.
