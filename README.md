@@ -882,8 +882,7 @@ zone.js	Necesario para la detección de cambios en Angular.
 - Express body-parser encriptar texto usando crypto
 
 
-
-###📦 reconocimiento de voz en angular
+### 📦 reconocimiento de voz en angular
 - ejemplo usar SpeechRecognition Web Speech API en JavaScript
 - SpeechRecognition JavaScript ejemplo en español recortar texto con slice()
 - javascript SpeechRecognition onresult onend ejemplo completo
